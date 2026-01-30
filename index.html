@@ -69,7 +69,6 @@
             --border-sidebar: rgba(255,255,255,0.04);
             --border-section: rgba(255,255,255,0.05);
             --avatar-border-bg: #1b2838;
-            --space-bg-opacity: 1;
         }
 
         [data-theme="light"] {
@@ -110,7 +109,6 @@
             --border-sidebar: rgba(0,0,0,0.06);
             --border-section: rgba(0,0,0,0.06);
             --avatar-border-bg: #e8edf2;
-            --space-bg-opacity: 0.15;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -122,21 +120,19 @@
             transition: background 0.3s, color 0.3s;
         }
 
-        /* Fixed space background */
+        /* Fixed particle background */
         .bg-space {
             position: fixed;
             inset: 0;
             z-index: -1;
-            background:
-                url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=1920&q=80') center/cover no-repeat fixed;
-            opacity: var(--space-bg-opacity);
-            transition: opacity 0.3s;
+            background: var(--bg-body);
+            overflow: hidden;
         }
-        .bg-space::after {
-            content: '';
+        .bg-space canvas {
             position: absolute;
             inset: 0;
-            background: var(--bg-overlay);
+            width: 100%;
+            height: 100%;
         }
 
         /* Scrollbar */
@@ -618,8 +614,10 @@
 </head>
 <body class="font-steam">
 
-    <!-- Fixed space background -->
-    <div class="bg-space"></div>
+    <!-- Fixed particle background -->
+    <div class="bg-space">
+        <canvas id="particleCanvas"></canvas>
+    </div>
 
 
     <!-- ===== STEAM SUB-NAVIGATION ===== -->
@@ -1111,6 +1109,94 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
     <script>
+        // ===== PARTICLE BACKGROUND =====
+        (function() {
+            var canvas = document.getElementById('particleCanvas');
+            var ctx = canvas.getContext('2d');
+            var particles = [];
+            var count = 80;
+            var mouse = { x: -1000, y: -1000 };
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            document.addEventListener('mousemove', function(e) {
+                mouse.x = e.clientX;
+                mouse.y = e.clientY;
+            });
+
+            function isDark() {
+                return document.documentElement.getAttribute('data-theme') !== 'light';
+            }
+
+            for (var i = 0; i < count; i++) {
+                particles.push({
+                    x: Math.random() * window.innerWidth,
+                    y: Math.random() * window.innerHeight,
+                    vx: (Math.random() - 0.5) * 0.4,
+                    vy: (Math.random() - 0.5) * 0.4,
+                    r: Math.random() * 2 + 0.5
+                });
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                var dark = isDark();
+                var dotColor = dark ? 'rgba(102,192,244,' : 'rgba(26,159,255,';
+                var lineColor = dark ? 'rgba(102,192,244,' : 'rgba(26,159,255,';
+
+                for (var i = 0; i < particles.length; i++) {
+                    var p = particles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    if (p.x < 0) p.x = canvas.width;
+                    if (p.x > canvas.width) p.x = 0;
+                    if (p.y < 0) p.y = canvas.height;
+                    if (p.y > canvas.height) p.y = 0;
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fillStyle = dotColor + (dark ? '0.5)' : '0.3)');
+                    ctx.fill();
+
+                    // Lines between nearby particles
+                    for (var j = i + 1; j < particles.length; j++) {
+                        var p2 = particles[j];
+                        var dx = p.x - p2.x;
+                        var dy = p.y - p2.y;
+                        var dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 120) {
+                            ctx.beginPath();
+                            ctx.moveTo(p.x, p.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.strokeStyle = lineColor + (0.12 * (1 - dist / 120)) + ')';
+                            ctx.lineWidth = 0.5;
+                            ctx.stroke();
+                        }
+                    }
+
+                    // Mouse interaction
+                    var mdx = p.x - mouse.x;
+                    var mdy = p.y - mouse.y;
+                    var mDist = Math.sqrt(mdx * mdx + mdy * mdy);
+                    if (mDist < 150) {
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(mouse.x, mouse.y);
+                        ctx.strokeStyle = lineColor + (0.2 * (1 - mDist / 150)) + ')';
+                        ctx.lineWidth = 0.8;
+                        ctx.stroke();
+                    }
+                }
+                requestAnimationFrame(draw);
+            }
+            draw();
+        })();
+
         (function() {
             const html = document.documentElement;
             const toggle = document.getElementById('themeToggle');
