@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,12 +30,96 @@
         }
     </script>
     <style>
+        /* ===== THEME CSS VARIABLES ===== */
+        [data-theme="dark"] {
+            --bg-body: #1b2838;
+            --bg-overlay: rgba(27, 40, 56, 0.82);
+            --bg-nav: linear-gradient(to right, #171a21 0%, #1b2838 100%);
+            --bg-subnav: linear-gradient(135deg, rgba(42,71,94,0.95), rgba(27,40,56,0.98));
+            --bg-block: rgba(0, 0, 0, 0.5);
+            --bg-showcase: linear-gradient(135deg, rgba(42,71,94,0.35), rgba(0,0,0,0.4));
+            --bg-game-row: rgba(0,0,0,0.3);
+            --bg-game-row-hover: rgba(102,192,244,0.06);
+            --bg-badge-item: rgba(0,0,0,0.3);
+            --bg-badge-item-hover: rgba(102,192,244,0.08);
+            --bg-section-header: linear-gradient(to right, rgba(42,71,94,0.6), transparent);
+            --bg-sidebar-link-hover: rgba(102,192,244,0.04);
+            --bg-level-badge: linear-gradient(135deg, #1b2838, #2a475e);
+            --bg-scrollbar-track: #1b2838;
+            --bg-scrollbar-thumb: #3d6c8e;
+            --bg-scrollbar-thumb-hover: #66c0f4;
+            --bg-btn: linear-gradient(to bottom, rgba(102,192,244,0.3) 0%, rgba(102,192,244,0.1) 100%);
+            --bg-btn-hover: linear-gradient(to bottom, rgba(102,192,244,0.5) 0%, rgba(102,192,244,0.2) 100%);
+            --bg-count: rgba(102,192,244,0.12);
+            --text-primary: #c6d4df;
+            --text-secondary: #8f98a0;
+            --text-accent: #66c0f4;
+            --text-nav: #b8b6b4;
+            --text-nav-hover: #fff;
+            --text-heading: #fff;
+            --border-block: rgba(102,192,244,0.1);
+            --border-showcase: rgba(102,192,244,0.12);
+            --border-game-row: rgba(102,192,244,0.06);
+            --border-game-row-hover: rgba(102,192,244,0.15);
+            --border-badge-item: rgba(102,192,244,0.08);
+            --border-badge-item-hover: rgba(102,192,244,0.2);
+            --border-subnav: rgba(102,192,244,0.15);
+            --border-nav: rgba(255,255,255,0.08);
+            --border-btn: rgba(102,192,244,0.4);
+            --border-sidebar: rgba(255,255,255,0.04);
+            --border-section: rgba(255,255,255,0.05);
+            --avatar-border-bg: #1b2838;
+            --space-bg-opacity: 1;
+        }
+
+        [data-theme="light"] {
+            --bg-body: #e8edf2;
+            --bg-overlay: rgba(232, 237, 242, 0.88);
+            --bg-nav: linear-gradient(to right, #d2d8de 0%, #e8edf2 100%);
+            --bg-subnav: linear-gradient(135deg, rgba(200,215,230,0.95), rgba(232,237,242,0.98));
+            --bg-block: rgba(255, 255, 255, 0.75);
+            --bg-showcase: linear-gradient(135deg, rgba(200,215,230,0.5), rgba(255,255,255,0.6));
+            --bg-game-row: rgba(255,255,255,0.5);
+            --bg-game-row-hover: rgba(102,192,244,0.1);
+            --bg-badge-item: rgba(255,255,255,0.5);
+            --bg-badge-item-hover: rgba(102,192,244,0.1);
+            --bg-section-header: linear-gradient(to right, rgba(180,200,220,0.5), transparent);
+            --bg-sidebar-link-hover: rgba(102,192,244,0.08);
+            --bg-level-badge: linear-gradient(135deg, #dce3ea, #c8d5e0);
+            --bg-scrollbar-track: #e8edf2;
+            --bg-scrollbar-thumb: #b0bec5;
+            --bg-scrollbar-thumb-hover: #1a9fff;
+            --bg-btn: linear-gradient(to bottom, rgba(26,159,255,0.15) 0%, rgba(26,159,255,0.05) 100%);
+            --bg-btn-hover: linear-gradient(to bottom, rgba(26,159,255,0.25) 0%, rgba(26,159,255,0.1) 100%);
+            --bg-count: rgba(26,159,255,0.12);
+            --text-primary: #2c3e50;
+            --text-secondary: #5a6a7a;
+            --text-accent: #1a6fa0;
+            --text-nav: #4a5568;
+            --text-nav-hover: #1a202c;
+            --text-heading: #1a202c;
+            --border-block: rgba(0,0,0,0.1);
+            --border-showcase: rgba(0,0,0,0.1);
+            --border-game-row: rgba(0,0,0,0.06);
+            --border-game-row-hover: rgba(26,159,255,0.2);
+            --border-badge-item: rgba(0,0,0,0.06);
+            --border-badge-item-hover: rgba(26,159,255,0.2);
+            --border-subnav: rgba(0,0,0,0.1);
+            --border-nav: rgba(0,0,0,0.08);
+            --border-btn: rgba(26,159,255,0.3);
+            --border-sidebar: rgba(0,0,0,0.06);
+            --border-section: rgba(0,0,0,0.06);
+            --avatar-border-bg: #e8edf2;
+            --space-bg-opacity: 0.15;
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: Arial, Helvetica, sans-serif;
-            color: #c6d4df;
+            color: var(--text-primary);
             min-height: 100vh;
-            background: #1b2838;
+            background: var(--bg-body);
+            transition: background 0.3s, color 0.3s;
         }
 
         /* Fixed space background */
@@ -45,27 +129,29 @@
             z-index: -1;
             background:
                 url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=1920&q=80') center/cover no-repeat fixed;
+            opacity: var(--space-bg-opacity);
+            transition: opacity 0.3s;
         }
         .bg-space::after {
             content: '';
             position: absolute;
             inset: 0;
-            background: rgba(27, 40, 56, 0.82);
+            background: var(--bg-overlay);
         }
 
-        /* Steam scrollbar */
+        /* Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #1b2838; }
-        ::-webkit-scrollbar-thumb { background: #3d6c8e; border-radius: 0; }
-        ::-webkit-scrollbar-thumb:hover { background: #66c0f4; }
+        ::-webkit-scrollbar-track { background: var(--bg-scrollbar-track); }
+        ::-webkit-scrollbar-thumb { background: var(--bg-scrollbar-thumb); border-radius: 0; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--bg-scrollbar-thumb-hover); }
 
         /* Steam top nav */
         .steam-nav {
-            background: linear-gradient(to right, #171a21 0%, #1b2838 100%);
-            border-bottom: 1px solid rgba(255,255,255,0.08);
+            background: var(--bg-nav);
+            border-bottom: 1px solid var(--border-nav);
         }
         .steam-nav a {
-            color: #b8b6b4;
+            color: var(--text-nav);
             font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -73,15 +159,18 @@
             line-height: 36px;
             transition: color 0.15s;
         }
-        .steam-nav a:hover { color: #fff; }
+        .steam-nav a:hover { color: var(--text-nav-hover); }
 
         /* Steam sub-nav */
         .steam-subnav {
-            background: linear-gradient(135deg, rgba(42,71,94,0.95), rgba(27,40,56,0.98));
-            border-bottom: 1px solid rgba(102,192,244,0.15);
+            background: var(--bg-subnav);
+            border-bottom: 1px solid var(--border-subnav);
+            position: sticky;
+            top: 0;
+            z-index: 50;
         }
         .steam-subnav a {
-            color: #66c0f4;
+            color: var(--text-accent);
             font-size: 12px;
             padding: 8px 12px;
             transition: all 0.15s;
@@ -89,11 +178,21 @@
         }
         .steam-subnav a:hover,
         .steam-subnav a.active {
-            color: #fff;
-            border-bottom-color: #66c0f4;
+            color: var(--text-heading);
+            border-bottom-color: var(--text-accent);
         }
 
-        /* Profile header gradient - Steam style */
+        /* Header image gradient overlay */
+        .header-gradient {
+            background: linear-gradient(
+                to bottom,
+                transparent 0%,
+                transparent 30%,
+                var(--bg-body) 100%
+            );
+        }
+
+        /* Profile header gradient */
         .profile-header {
             background: linear-gradient(
                 to bottom,
@@ -116,7 +215,7 @@
             width: 18px; height: 18px;
             background: #57cbde;
             border-radius: 2px;
-            border: 2px solid #1b2838;
+            border: 2px solid var(--avatar-border-bg);
         }
 
         /* Steam level badge */
@@ -124,7 +223,7 @@
             width: 60px; height: 60px;
             border-radius: 50%;
             border: 3px solid #57cbde;
-            background: linear-gradient(135deg, #1b2838, #2a475e);
+            background: var(--bg-level-badge);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -141,27 +240,28 @@
 
         /* Steam content block */
         .steam-block {
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(102,192,244,0.1);
+            background: var(--bg-block);
+            border: 1px solid var(--border-block);
             backdrop-filter: blur(8px);
+            transition: background 0.3s, border-color 0.3s;
         }
 
         /* Steam section header */
         .steam-section-header {
-            background: linear-gradient(to right, rgba(42,71,94,0.6), transparent);
-            border-left: 3px solid #66c0f4;
+            background: var(--bg-section-header);
+            border-left: 3px solid var(--text-accent);
             padding: 6px 12px;
             font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            color: #66c0f4;
+            color: var(--text-accent);
         }
 
         /* Steam button */
         .steam-btn {
-            background: linear-gradient(to bottom, rgba(102,192,244,0.3) 0%, rgba(102,192,244,0.1) 100%);
-            border: 1px solid rgba(102,192,244,0.4);
-            color: #66c0f4;
+            background: var(--bg-btn);
+            border: 1px solid var(--border-btn);
+            color: var(--text-accent);
             font-size: 12px;
             padding: 6px 16px;
             cursor: pointer;
@@ -172,9 +272,9 @@
             gap: 6px;
         }
         .steam-btn:hover {
-            background: linear-gradient(to bottom, rgba(102,192,244,0.5) 0%, rgba(102,192,244,0.2) 100%);
-            border-color: #66c0f4;
-            color: #fff;
+            background: var(--bg-btn-hover);
+            border-color: var(--text-accent);
+            color: var(--text-heading);
         }
         .steam-btn-green {
             background: linear-gradient(to bottom, #5ba32b 0%, #4a8a24 100%);
@@ -188,54 +288,232 @@
 
         /* Steam badge item */
         .steam-badge-item {
-            background: rgba(0,0,0,0.3);
-            border: 1px solid rgba(102,192,244,0.08);
+            background: var(--bg-badge-item);
+            border: 1px solid var(--border-badge-item);
             transition: all 0.2s;
         }
         .steam-badge-item:hover {
-            background: rgba(102,192,244,0.08);
-            border-color: rgba(102,192,244,0.2);
+            background: var(--bg-badge-item-hover);
+            border-color: var(--border-badge-item-hover);
         }
 
         /* Showcase block */
         .showcase-block {
-            background: linear-gradient(135deg, rgba(42,71,94,0.35), rgba(0,0,0,0.4));
-            border: 1px solid rgba(102,192,244,0.12);
+            background: var(--bg-showcase);
+            border: 1px solid var(--border-showcase);
+            transition: background 0.3s, border-color 0.3s;
         }
 
         /* Recent activity game row */
         .game-row {
-            background: rgba(0,0,0,0.3);
-            border: 1px solid rgba(102,192,244,0.06);
+            background: var(--bg-game-row);
+            border: 1px solid var(--border-game-row);
             transition: all 0.2s;
         }
         .game-row:hover {
-            background: rgba(102,192,244,0.06);
-            border-color: rgba(102,192,244,0.15);
+            background: var(--bg-game-row-hover);
+            border-color: var(--border-game-row-hover);
         }
 
         /* Steam sidebar link rows */
         .sidebar-link {
-            color: #8f98a0;
+            color: var(--text-secondary);
             font-size: 12px;
             padding: 7px 10px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-bottom: 1px solid rgba(255,255,255,0.04);
+            border-bottom: 1px solid var(--border-sidebar);
             transition: all 0.15s;
         }
         .sidebar-link:hover {
-            color: #66c0f4;
-            background: rgba(102,192,244,0.04);
+            color: var(--text-accent);
+            background: var(--bg-sidebar-link-hover);
         }
         .sidebar-link .count {
-            background: rgba(102,192,244,0.12);
-            color: #66c0f4;
+            background: var(--bg-count);
+            color: var(--text-accent);
             font-size: 10px;
             padding: 1px 7px;
             border-radius: 2px;
         }
+
+        /* Theme toggle button */
+        .theme-toggle {
+            background: none;
+            border: 1px solid var(--border-btn);
+            color: var(--text-accent);
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            font-size: 14px;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+        .theme-toggle:hover {
+            background: var(--bg-btn-hover);
+            color: var(--text-heading);
+        }
+        [data-theme="dark"] .theme-toggle .fa-sun { display: inline; }
+        [data-theme="dark"] .theme-toggle .fa-moon { display: none; }
+        [data-theme="light"] .theme-toggle .fa-sun { display: none; }
+        [data-theme="light"] .theme-toggle .fa-moon { display: inline; }
+
+        /* Light mode overrides for Tailwind text classes */
+        [data-theme="light"] .text-white { color: var(--text-heading) !important; }
+        [data-theme="light"] .text-steamTextDark { color: var(--text-secondary) !important; }
+        [data-theme="light"] .text-steamText { color: var(--text-primary) !important; }
+        [data-theme="light"] .text-steamLight { color: var(--text-accent) !important; }
+        [data-theme="light"] .border-white\/5 { border-color: var(--border-section) !important; }
+        [data-theme="light"] .bg-steamMid\/50,
+        [data-theme="light"] .bg-steamMid\/40,
+        [data-theme="light"] .bg-steamMid\/30 { background-color: rgba(180,200,220,0.4) !important; }
+
+        /* Footer */
+        footer {
+            border-color: var(--border-section) !important;
+        }
+
+        /* ===== CHAT WIDGET ===== */
+        .chat-fab {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(to bottom, #5ba32b 0%, #4a8a24 100%);
+            border: 2px solid #6bc736;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(91,163,43,0.4);
+            transition: all 0.2s;
+            animation: chat-bounce 2s ease infinite;
+        }
+        .chat-fab:hover {
+            background: linear-gradient(to bottom, #6bc736 0%, #5ba32b 100%);
+            transform: scale(1.08);
+            box-shadow: 0 6px 20px rgba(91,163,43,0.5);
+        }
+        @keyframes chat-bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+        .chat-fab:hover { animation: none; transform: scale(1.08); }
+
+        .chat-window {
+            position: fixed;
+            bottom: 90px;
+            right: 24px;
+            width: 350px;
+            max-height: 480px;
+            background: var(--bg-block);
+            border: 1px solid var(--border-block);
+            backdrop-filter: blur(12px);
+            border-radius: 6px;
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            opacity: 0;
+            transform: translateY(16px) scale(0.96);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+        .chat-window.open {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        .chat-window.closing {
+            display: flex;
+            opacity: 0;
+            transform: translateY(16px) scale(0.96);
+        }
+
+        .chat-header {
+            background: var(--bg-section-header);
+            border-left: 3px solid var(--text-accent);
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .chat-header span {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-accent);
+            font-weight: bold;
+        }
+        .chat-header button {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 16px;
+            cursor: pointer;
+            padding: 2px 6px;
+            transition: color 0.15s;
+        }
+        .chat-header button:hover { color: var(--text-heading); }
+
+        .chat-body {
+            padding: 16px;
+            overflow-y: auto;
+            flex: 1;
+        }
+        .chat-body label {
+            display: block;
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        .chat-body input,
+        .chat-body textarea {
+            width: 100%;
+            padding: 8px 10px;
+            font-size: 12px;
+            font-family: Arial, Helvetica, sans-serif;
+            color: var(--text-primary);
+            background: rgba(0,0,0,0.25);
+            border: 1px solid var(--border-block);
+            border-radius: 3px;
+            margin-bottom: 12px;
+            outline: none;
+            transition: border-color 0.15s;
+        }
+        [data-theme="light"] .chat-body input,
+        [data-theme="light"] .chat-body textarea {
+            background: rgba(255,255,255,0.5);
+        }
+        .chat-body input:focus,
+        .chat-body textarea:focus {
+            border-color: var(--text-accent);
+        }
+        .chat-body textarea {
+            resize: vertical;
+            min-height: 70px;
+        }
+
+        .chat-status {
+            font-size: 11px;
+            padding: 8px 0 0;
+            text-align: center;
+        }
+        .chat-status.success { color: #5ba32b; }
+        .chat-status.error { color: #c35050; }
 
         /* Responsive helper */
         @media (max-width: 768px) {
@@ -244,6 +522,19 @@
             .profile-main { width: 100% !important; order: 1; }
             .header-flex { flex-direction: column; text-align: center; align-items: center !important; }
             .level-badge-wrap { position: static !important; margin-top: 12px; }
+            .chat-window {
+                right: 12px;
+                left: 12px;
+                width: auto;
+                bottom: 84px;
+            }
+            .chat-fab {
+                bottom: 16px;
+                right: 16px;
+                width: 48px;
+                height: 48px;
+                font-size: 20px;
+            }
         }
     </style>
 </head>
@@ -258,6 +549,10 @@
         <a href="#" class="active whitespace-nowrap">Profile</a>
         <a href="#activity" class="whitespace-nowrap">Activity</a>
         <a href="#badges-section" class="whitespace-nowrap">Badges</a>
+        <button class="theme-toggle" id="themeToggle" title="Toggle dark/light mode">
+            <i class="fas fa-sun"></i>
+            <i class="fas fa-moon"></i>
+        </button>
     </div>
 
     <!-- ===== PROFILE HEADER ===== -->
@@ -265,7 +560,7 @@
         <!-- Header background image -->
         <div class="h-48 md:h-64 relative overflow-hidden">
             <div class="absolute inset-0" style="background: url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?w=1920&q=80') center/cover;"></div>
-            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-steamDark/95"></div>
+            <div class="absolute inset-0 header-gradient"></div>
         </div>
 
         <!-- Profile info overlay -->
@@ -274,9 +569,7 @@
                 <!-- Avatar -->
                 <div class="shrink-0">
                     <div class="steam-avatar w-20 h-20 md:w-28 md:h-28 rounded overflow-hidden bg-steamMid">
-                        <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-steamMid to-steamDark">
-                            <i class="fas fa-user-astronaut text-3xl md:text-5xl text-steamLight/60"></i>
-                        </div>
+                        <img src="src/avatar.png" alt="Burak Toprak" class="w-full h-full object-cover">
                     </div>
                 </div>
 
@@ -311,14 +604,11 @@
 
             <!-- Action buttons row -->
             <div class="flex flex-wrap items-center gap-2 mt-4 pb-4 border-b border-white/5">
-                <a href="mailto:tburak181@gmail.com" class="steam-btn-green steam-btn">
+                <a href="mailto:tburak181@gmail.com" target="_blank" class="steam-btn-green steam-btn">
                     <i class="fas fa-envelope"></i> Contact Me (Email)
                 </a>
                 <a href="https://www.linkedin.com/in/burvktoprak/" target="_blank" class="steam-btn">
                     <i class="fab fa-linkedin"></i> LinkedIn
-                </a>
-                <a href="#" class="steam-btn">
-                    <i class="fab fa-github"></i> Source Code
                 </a>
                 <div class="ml-auto hidden md:flex items-center gap-2">
                     <span class="text-[10px] text-steamTextDark">
@@ -681,9 +971,6 @@
                         <a href="https://www.linkedin.com/in/burvktoprak/" target="_blank" class="steam-btn w-full justify-center text-[11px]">
                             <i class="fab fa-linkedin"></i> LinkedIn Profile
                         </a>
-                        <a href="#" class="steam-btn w-full justify-center text-[11px]">
-                            <i class="fab fa-github"></i> GitHub (Mod Workshop)
-                        </a>
                     </div>
                 </div>
 
@@ -695,14 +982,156 @@
     <footer class="mt-8 py-4 border-t border-white/5">
         <div class="max-w-5xl mx-auto px-4 md:px-8 flex flex-col sm:flex-row items-center justify-between gap-2">
             <p class="text-[10px] text-steamTextDark">
-                <i class="fab fa-steam mr-1"></i>
-                &copy; 2024 Burak Toprak &mdash; Steam Community Profile (Portfolio Edition)
-            </p>
-            <p class="text-[10px] text-steamTextDark">
-                All trademarks are property of their respective owners.
+                &copy; 2026 Burak Toprak
             </p>
         </div>
     </footer>
 
+    <!-- Chat Widget -->
+    <button class="chat-fab" id="chatFab" title="Send me a message">
+        <i class="fas fa-comment-dots"></i>
+    </button>
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <span><i class="fas fa-envelope mr-1"></i> Send a Message</span>
+            <button id="chatClose" title="Close">&times;</button>
+        </div>
+        <div class="chat-body">
+            <form id="chatForm" autocomplete="off">
+                <label for="chatName">Name</label>
+                <input type="text" id="chatName" name="from_name" placeholder="Your name" required>
+
+                <label for="chatEmail">Email</label>
+                <input type="email" id="chatEmail" name="from_email" placeholder="your@email.com" required>
+
+                <label for="chatMessage">Message</label>
+                <textarea id="chatMessage" name="message" placeholder="Write your message..." required></textarea>
+
+                <button type="submit" class="steam-btn-green steam-btn w-full justify-center" id="chatSend">
+                    <i class="fas fa-paper-plane"></i> Send
+                </button>
+            </form>
+            <div class="chat-status" id="chatStatus"></div>
+        </div>
+    </div>
+
+    <!-- EmailJS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+    <script>
+        (function() {
+            const html = document.documentElement;
+            const toggle = document.getElementById('themeToggle');
+
+            function getPreferredTheme() {
+                const stored = localStorage.getItem('theme');
+                if (stored) return stored;
+                return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+            }
+
+            function setTheme(theme) {
+                html.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+            }
+
+            // Apply saved/system theme on load
+            setTheme(getPreferredTheme());
+
+            toggle.addEventListener('click', function() {
+                const current = html.getAttribute('data-theme');
+                setTheme(current === 'dark' ? 'light' : 'dark');
+            });
+        })();
+
+        // ===== CHAT WIDGET =====
+        (function() {
+            // EmailJS config — replace with your actual keys
+            const EMAILJS_PUBLIC_KEY = 'jaZNWKCj7BpJmMWwN';
+            const EMAILJS_SERVICE_ID = 'service_glczfu8';
+            const EMAILJS_TEMPLATE_ID = 'template_16v2ttf';
+
+            // Init EmailJS
+            if (window.emailjs) {
+                emailjs.init(EMAILJS_PUBLIC_KEY);
+            }
+
+            const fab = document.getElementById('chatFab');
+            const win = document.getElementById('chatWindow');
+            const closeBtn = document.getElementById('chatClose');
+            const form = document.getElementById('chatForm');
+            const status = document.getElementById('chatStatus');
+            const sendBtn = document.getElementById('chatSend');
+            let isOpen = false;
+
+            function openChat() {
+                win.classList.remove('closing');
+                win.style.display = 'flex';
+                // Force reflow for animation
+                void win.offsetHeight;
+                win.classList.add('open');
+                fab.style.animation = 'none';
+                isOpen = true;
+            }
+
+            function closeChat() {
+                win.classList.remove('open');
+                win.classList.add('closing');
+                setTimeout(function() {
+                    win.classList.remove('closing');
+                    win.style.display = 'none';
+                }, 250);
+                isOpen = false;
+            }
+
+            fab.addEventListener('click', function() {
+                if (isOpen) { closeChat(); } else { openChat(); }
+            });
+
+            closeBtn.addEventListener('click', closeChat);
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                status.textContent = '';
+                status.className = 'chat-status';
+
+                var name = document.getElementById('chatName').value.trim();
+                var email = document.getElementById('chatEmail').value.trim();
+                var message = document.getElementById('chatMessage').value.trim();
+
+                if (!name || !email || !message) {
+                    status.textContent = 'Please fill in all fields.';
+                    status.classList.add('error');
+                    return;
+                }
+
+                // Check if EmailJS is configured
+                if (EMAILJS_PUBLIC_KEY === 'YOUR_PUBLIC_KEY') {
+                    status.textContent = 'EmailJS is not configured yet. Please set your keys.';
+                    status.classList.add('error');
+                    return;
+                }
+
+                sendBtn.disabled = true;
+                sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+                emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+                    from_name: name,
+                    from_email: email,
+                    message: message
+                }).then(function() {
+                    status.textContent = 'Message sent successfully!';
+                    status.classList.add('success');
+                    form.reset();
+                }, function(err) {
+                    status.textContent = 'Failed to send. Please try again.';
+                    status.classList.add('error');
+                    console.error('EmailJS error:', err);
+                }).finally(function() {
+                    sendBtn.disabled = false;
+                    sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send';
+                });
+            });
+        })();
+    </script>
 </body>
 </html>
