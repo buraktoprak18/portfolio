@@ -515,6 +515,52 @@
         .chat-status.success { color: #5ba32b; }
         .chat-status.error { color: #c35050; }
 
+        /* ===== MEMORY GAME ===== */
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+        }
+        .memory-card {
+            aspect-ratio: 1;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            background: var(--bg-btn);
+            border: 1px solid var(--border-btn);
+            color: transparent;
+            transition: all 0.3s;
+            user-select: none;
+        }
+        .memory-card:hover:not(.flipped):not(.matched) {
+            background: var(--bg-btn-hover);
+            border-color: var(--text-accent);
+        }
+        .memory-card.flipped {
+            background: rgba(0,0,0,0.4);
+            border-color: var(--text-accent);
+            color: var(--text-heading);
+        }
+        [data-theme="light"] .memory-card.flipped {
+            background: rgba(255,255,255,0.7);
+        }
+        .memory-card.matched {
+            background: linear-gradient(to bottom, rgba(91,163,43,0.2), rgba(91,163,43,0.1));
+            border-color: #6bc736;
+            color: #6bc736;
+            cursor: default;
+        }
+        .memory-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+
         /* Responsive helper */
         @media (max-width: 768px) {
             .profile-layout { flex-direction: column; }
@@ -984,6 +1030,24 @@
                     </div>
                 </div>
 
+                <!-- Mini Game -->
+                <div class="steam-block rounded overflow-hidden">
+                    <div class="steam-section-header text-[10px] flex items-center gap-2">
+                        <i class="fas fa-gamepad mr-1"></i> Mini Game
+                        <span class="ml-auto text-[10px] text-steamTextDark font-normal normal-case tracking-normal">Memory</span>
+                    </div>
+                    <div class="p-3">
+                        <div class="memory-grid" id="memoryGrid"></div>
+                        <div class="memory-stats">
+                            <span>Moves: <strong id="memoryMoves">0</strong></span>
+                            <span>Matched: <strong id="memoryMatched">0</strong>/8</span>
+                            <button id="memoryReset" class="steam-btn" style="padding:2px 8px;font-size:10px;">
+                                <i class="fas fa-redo"></i> Reset
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Quick Contact -->
                 <div class="steam-block rounded overflow-hidden">
                     <div class="steam-section-header text-[10px]">
@@ -1069,6 +1133,81 @@
                 const current = html.getAttribute('data-theme');
                 setTheme(current === 'dark' ? 'light' : 'dark');
             });
+        })();
+
+        // ===== MEMORY GAME =====
+        (function() {
+            var icons = ['fa-database','fa-code','fa-bug','fa-rocket','fa-brain','fa-mobile-alt','fa-plug','fa-chart-line'];
+            var cards = icons.concat(icons);
+            var flipped = [];
+            var matched = 0;
+            var moves = 0;
+            var locked = false;
+            var grid = document.getElementById('memoryGrid');
+            var movesEl = document.getElementById('memoryMoves');
+            var matchedEl = document.getElementById('memoryMatched');
+
+            function shuffle(arr) {
+                for (var i = arr.length - 1; i > 0; i--) {
+                    var j = Math.floor(Math.random() * (i + 1));
+                    var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+                }
+                return arr;
+            }
+
+            function createBoard() {
+                grid.innerHTML = '';
+                matched = 0; moves = 0; flipped = []; locked = false;
+                movesEl.textContent = '0';
+                matchedEl.textContent = '0';
+                shuffle(cards);
+                cards.forEach(function(icon, i) {
+                    var card = document.createElement('div');
+                    card.className = 'memory-card';
+                    card.dataset.icon = icon;
+                    card.dataset.index = i;
+                    card.innerHTML = '<i class="fas ' + icon + '"></i>';
+                    card.addEventListener('click', flipCard);
+                    grid.appendChild(card);
+                });
+            }
+
+            function flipCard() {
+                if (locked) return;
+                var card = this;
+                if (card.classList.contains('flipped') || card.classList.contains('matched')) return;
+                card.classList.add('flipped');
+                flipped.push(card);
+
+                if (flipped.length === 2) {
+                    moves++;
+                    movesEl.textContent = moves;
+                    locked = true;
+                    if (flipped[0].dataset.icon === flipped[1].dataset.icon) {
+                        flipped[0].classList.add('matched');
+                        flipped[1].classList.add('matched');
+                        matched++;
+                        matchedEl.textContent = matched;
+                        flipped = [];
+                        locked = false;
+                        if (matched === 8) {
+                            setTimeout(function() {
+                                alert('Congratulations! You won in ' + moves + ' moves!');
+                            }, 400);
+                        }
+                    } else {
+                        setTimeout(function() {
+                            flipped[0].classList.remove('flipped');
+                            flipped[1].classList.remove('flipped');
+                            flipped = [];
+                            locked = false;
+                        }, 700);
+                    }
+                }
+            }
+
+            document.getElementById('memoryReset').addEventListener('click', createBoard);
+            createBoard();
         })();
 
         // ===== CHAT WIDGET =====
