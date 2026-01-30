@@ -1106,88 +1106,88 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
     <script>
-        // ===== PARTICLE BACKGROUND =====
+        // ===== STARFIELD BACKGROUND =====
         (function() {
             var canvas = document.getElementById('particleCanvas');
             var ctx = canvas.getContext('2d');
-            var particles = [];
-            var count = 80;
-            var mouse = { x: -1000, y: -1000 };
+            var stars = [];
+            var count = 200;
+            var centerX, centerY;
+            var speed = 0.5;
 
             function resize() {
                 canvas.width = window.innerWidth;
                 canvas.height = window.innerHeight;
+                centerX = canvas.width / 2;
+                centerY = canvas.height / 2;
             }
             resize();
             window.addEventListener('resize', resize);
-
-            document.addEventListener('mousemove', function(e) {
-                mouse.x = e.clientX;
-                mouse.y = e.clientY;
-            });
 
             function isDark() {
                 return document.documentElement.getAttribute('data-theme') !== 'light';
             }
 
+            function createStar() {
+                return {
+                    x: (Math.random() - 0.5) * canvas.width,
+                    y: (Math.random() - 0.5) * canvas.height,
+                    z: Math.random() * canvas.width,
+                    pz: 0
+                };
+            }
+
             for (var i = 0; i < count; i++) {
-                particles.push({
-                    x: Math.random() * window.innerWidth,
-                    y: Math.random() * window.innerHeight,
-                    vx: (Math.random() - 0.5) * 0.4,
-                    vy: (Math.random() - 0.5) * 0.4,
-                    r: Math.random() * 2 + 0.5
-                });
+                stars.push(createStar());
             }
 
             function draw() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
                 var dark = isDark();
-                var dotColor = dark ? 'rgba(102,192,244,' : 'rgba(26,159,255,';
-                var lineColor = dark ? 'rgba(102,192,244,' : 'rgba(26,159,255,';
+                ctx.fillStyle = dark ? 'rgba(27,40,56,0.25)' : 'rgba(232,237,242,0.25)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                for (var i = 0; i < particles.length; i++) {
-                    var p = particles[i];
-                    p.x += p.vx;
-                    p.y += p.vy;
-                    if (p.x < 0) p.x = canvas.width;
-                    if (p.x > canvas.width) p.x = 0;
-                    if (p.y < 0) p.y = canvas.height;
-                    if (p.y > canvas.height) p.y = 0;
+                for (var i = 0; i < stars.length; i++) {
+                    var s = stars[i];
+                    s.pz = s.z;
+                    s.z -= speed * 2;
 
+                    if (s.z <= 0) {
+                        stars[i] = createStar();
+                        stars[i].z = canvas.width;
+                        continue;
+                    }
+
+                    var sx = (s.x / s.z) * canvas.width + centerX;
+                    var sy = (s.y / s.z) * canvas.height + centerY;
+                    var px = (s.x / s.pz) * canvas.width + centerX;
+                    var py = (s.y / s.pz) * canvas.height + centerY;
+
+                    if (sx < 0 || sx > canvas.width || sy < 0 || sy > canvas.height) {
+                        stars[i] = createStar();
+                        stars[i].z = canvas.width;
+                        continue;
+                    }
+
+                    var size = (1 - s.z / canvas.width) * 2.5;
+                    var alpha = (1 - s.z / canvas.width) * (dark ? 0.8 : 0.5);
+
+                    // Star trail
                     ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-                    ctx.fillStyle = dotColor + (dark ? '0.5)' : '0.3)');
+                    ctx.moveTo(px, py);
+                    ctx.lineTo(sx, sy);
+                    ctx.strokeStyle = dark
+                        ? 'rgba(102,192,244,' + alpha * 0.6 + ')'
+                        : 'rgba(26,159,255,' + alpha * 0.4 + ')';
+                    ctx.lineWidth = size * 0.8;
+                    ctx.stroke();
+
+                    // Star dot
+                    ctx.beginPath();
+                    ctx.arc(sx, sy, size * 0.5, 0, Math.PI * 2);
+                    ctx.fillStyle = dark
+                        ? 'rgba(200,220,240,' + alpha + ')'
+                        : 'rgba(26,100,180,' + alpha + ')';
                     ctx.fill();
-
-                    // Lines between nearby particles
-                    for (var j = i + 1; j < particles.length; j++) {
-                        var p2 = particles[j];
-                        var dx = p.x - p2.x;
-                        var dy = p.y - p2.y;
-                        var dist = Math.sqrt(dx * dx + dy * dy);
-                        if (dist < 120) {
-                            ctx.beginPath();
-                            ctx.moveTo(p.x, p.y);
-                            ctx.lineTo(p2.x, p2.y);
-                            ctx.strokeStyle = lineColor + (0.12 * (1 - dist / 120)) + ')';
-                            ctx.lineWidth = 0.5;
-                            ctx.stroke();
-                        }
-                    }
-
-                    // Mouse interaction
-                    var mdx = p.x - mouse.x;
-                    var mdy = p.y - mouse.y;
-                    var mDist = Math.sqrt(mdx * mdx + mdy * mdy);
-                    if (mDist < 150) {
-                        ctx.beginPath();
-                        ctx.moveTo(p.x, p.y);
-                        ctx.lineTo(mouse.x, mouse.y);
-                        ctx.strokeStyle = lineColor + (0.2 * (1 - mDist / 150)) + ')';
-                        ctx.lineWidth = 0.8;
-                        ctx.stroke();
-                    }
                 }
                 requestAnimationFrame(draw);
             }
