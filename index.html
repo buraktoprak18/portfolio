@@ -522,11 +522,36 @@
             .profile-main { width: 100% !important; order: 1; }
             .header-flex { flex-direction: column; text-align: center; align-items: center !important; }
             .level-badge-wrap { position: static !important; margin-top: 12px; }
+
+            /* Action buttons stack vertically on mobile */
+            .flex.flex-wrap.items-center.gap-2.mt-4 {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .flex.flex-wrap.items-center.gap-2.mt-4 a {
+                justify-content: center;
+                width: 100%;
+            }
+
+            /* Subnav smaller text on mobile */
+            .steam-subnav a { font-size: 11px; padding: 8px 8px; }
+
+            /* Achievement showcase: allow horizontal scroll smoothly */
+            .showcase-block .p-4 { padding: 12px; }
+
+            /* Game row images full width */
+            .game-row { padding: 10px; }
+
+            /* Sidebar badges grid 3 cols still works but smaller padding */
+            .steam-block .p-3 { padding: 10px; }
+
+            /* Chat widget mobile */
             .chat-window {
                 right: 12px;
                 left: 12px;
                 width: auto;
-                bottom: 84px;
+                bottom: 78px;
+                max-height: 70vh;
             }
             .chat-fab {
                 bottom: 16px;
@@ -535,6 +560,13 @@
                 height: 48px;
                 font-size: 20px;
             }
+        }
+
+        /* Small phones */
+        @media (max-width: 380px) {
+            .steam-subnav a { font-size: 10px; padding: 6px 6px; }
+            .steam-section-header { font-size: 10px; letter-spacing: 1px; }
+            .chat-window { bottom: 72px; max-height: 65vh; }
         }
     </style>
 </head>
