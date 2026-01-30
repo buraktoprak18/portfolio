@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steam Community :: Burak Toprak</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        steamDark: '#1b2838',
+                        steamDarker: '#171a21',
+                        steamMid: '#2a475e',
+                        steamLight: '#66c0f4',
+                        steamBlue: '#1a9fff',
+                        steamText: '#c6d4df',
+                        steamTextDark: '#8f98a0',
+                        steamGreen: '#57cbde',
+                        steamOnline: '#57cbde',
+                        steamBg: '#1b2838',
+                    },
+                    fontFamily: {
+                        steam: ['Arial', 'Helvetica', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            color: #c6d4df;
+            min-height: 100vh;
+            background: #1b2838;
+        }
+
+        /* Fixed space background */
+        .bg-space {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background:
+                url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=1920&q=80') center/cover no-repeat fixed;
+        }
+        .bg-space::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(27, 40, 56, 0.82);
+        }
+
+        /* Steam scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1b2838; }
+        ::-webkit-scrollbar-thumb { background: #3d6c8e; border-radius: 0; }
+        ::-webkit-scrollbar-thumb:hover { background: #66c0f4; }
+
+        /* Steam top nav */
+        .steam-nav {
+            background: linear-gradient(to right, #171a21 0%, #1b2838 100%);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .steam-nav a {
+            color: #b8b6b4;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 0 8px;
+            line-height: 36px;
+            transition: color 0.15s;
+        }
+        .steam-nav a:hover { color: #fff; }
+
+        /* Steam sub-nav */
+        .steam-subnav {
+            background: linear-gradient(135deg, rgba(42,71,94,0.95), rgba(27,40,56,0.98));
+            border-bottom: 1px solid rgba(102,192,244,0.15);
+        }
+        .steam-subnav a {
+            color: #66c0f4;
+            font-size: 12px;
+            padding: 8px 12px;
+            transition: all 0.15s;
+            border-bottom: 2px solid transparent;
+        }
+        .steam-subnav a:hover,
+        .steam-subnav a.active {
+            color: #fff;
+            border-bottom-color: #66c0f4;
+        }
+
+        /* Profile header gradient - Steam style */
+        .profile-header {
+            background: linear-gradient(
+                to bottom,
+                rgba(27,40,56,0.0) 0%,
+                rgba(27,40,56,0.65) 40%,
+                rgba(27,40,56,0.92) 100%
+            );
+        }
+
+        /* Avatar Steam frame */
+        .steam-avatar {
+            border: 2px solid #57cbde;
+            box-shadow: 0 0 8px rgba(87,203,222,0.4), inset 0 0 0 1px rgba(87,203,222,0.15);
+            position: relative;
+        }
+        .steam-avatar::after {
+            content: '';
+            position: absolute;
+            bottom: -3px; right: -3px;
+            width: 18px; height: 18px;
+            background: #57cbde;
+            border-radius: 2px;
+            border: 2px solid #1b2838;
+        }
+
+        /* Steam level badge */
+        .level-badge {
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            border: 3px solid #57cbde;
+            background: linear-gradient(135deg, #1b2838, #2a475e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(87,203,222,0.3), 0 0 30px rgba(87,203,222,0.1);
+            position: relative;
+        }
+        .level-badge::before {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            border: 1px solid rgba(87,203,222,0.2);
+        }
+
+        /* Steam content block */
+        .steam-block {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(102,192,244,0.1);
+            backdrop-filter: blur(8px);
+        }
+
+        /* Steam section header */
+        .steam-section-header {
+            background: linear-gradient(to right, rgba(42,71,94,0.6), transparent);
+            border-left: 3px solid #66c0f4;
+            padding: 6px 12px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #66c0f4;
+        }
+
+        /* Steam button */
+        .steam-btn {
+            background: linear-gradient(to bottom, rgba(102,192,244,0.3) 0%, rgba(102,192,244,0.1) 100%);
+            border: 1px solid rgba(102,192,244,0.4);
+            color: #66c0f4;
+            font-size: 12px;
+            padding: 6px 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .steam-btn:hover {
+            background: linear-gradient(to bottom, rgba(102,192,244,0.5) 0%, rgba(102,192,244,0.2) 100%);
+            border-color: #66c0f4;
+            color: #fff;
+        }
+        .steam-btn-green {
+            background: linear-gradient(to bottom, #5ba32b 0%, #4a8a24 100%);
+            border: 1px solid #6bc736;
+            color: #d2efa9;
+        }
+        .steam-btn-green:hover {
+            background: linear-gradient(to bottom, #6bc736 0%, #5ba32b 100%);
+            color: #fff;
+        }
+
+        /* Steam badge item */
+        .steam-badge-item {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(102,192,244,0.08);
+            transition: all 0.2s;
+        }
+        .steam-badge-item:hover {
+            background: rgba(102,192,244,0.08);
+            border-color: rgba(102,192,244,0.2);
+        }
+
+        /* Showcase block */
+        .showcase-block {
+            background: linear-gradient(135deg, rgba(42,71,94,0.35), rgba(0,0,0,0.4));
+            border: 1px solid rgba(102,192,244,0.12);
+        }
+
+        /* Recent activity game row */
+        .game-row {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(102,192,244,0.06);
+            transition: all 0.2s;
+        }
+        .game-row:hover {
+            background: rgba(102,192,244,0.06);
+            border-color: rgba(102,192,244,0.15);
+        }
+
+        /* Steam sidebar link rows */
+        .sidebar-link {
+            color: #8f98a0;
+            font-size: 12px;
+            padding: 7px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            transition: all 0.15s;
+        }
+        .sidebar-link:hover {
+            color: #66c0f4;
+            background: rgba(102,192,244,0.04);
+        }
+        .sidebar-link .count {
+            background: rgba(102,192,244,0.12);
+            color: #66c0f4;
+            font-size: 10px;
+            padding: 1px 7px;
+            border-radius: 2px;
+        }
+
+        /* Responsive helper */
+        @media (max-width: 768px) {
+            .profile-layout { flex-direction: column; }
+            .profile-sidebar { width: 100% !important; order: 2; }
+            .profile-main { width: 100% !important; order: 1; }
+            .header-flex { flex-direction: column; text-align: center; align-items: center !important; }
+            .level-badge-wrap { position: static !important; margin-top: 12px; }
+        }
+    </style>
+</head>
+<body class="font-steam">
+
+    <!-- Fixed space background -->
+    <div class="bg-space"></div>
+
+
+    <!-- ===== STEAM SUB-NAVIGATION ===== -->
+    <div class="steam-subnav flex items-center px-4 md:px-8 gap-1 overflow-x-auto">
+        <a href="#" class="active whitespace-nowrap">Profile</a>
+        <a href="#activity" class="whitespace-nowrap">Activity</a>
+        <a href="#badges-section" class="whitespace-nowrap">Badges</a>
+        <a href="#" class="whitespace-nowrap">Friends</a>
+        <a href="#" class="whitespace-nowrap">Groups</a>
+    </div>
+
+    <!-- ===== PROFILE HEADER ===== -->
+    <div class="relative">
+        <!-- Header background image -->
+        <div class="h-48 md:h-64 relative overflow-hidden">
+            <div class="absolute inset-0" style="background: url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?w=1920&q=80') center/cover;"></div>
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-steamDark/95"></div>
+        </div>
+
+        <!-- Profile info overlay -->
+        <div class="relative -mt-24 md:-mt-28 px-4 md:px-8 max-w-5xl mx-auto">
+            <div class="header-flex flex items-end gap-5">
+                <!-- Avatar -->
+                <div class="shrink-0">
+                    <div class="steam-avatar w-20 h-20 md:w-28 md:h-28 rounded overflow-hidden bg-steamMid">
+                        <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-steamMid to-steamDark">
+                            <i class="fas fa-user-astronaut text-3xl md:text-5xl text-steamLight/60"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Name & Info -->
+                <div class="flex-1 pb-1">
+                    <h1 class="text-2xl md:text-3xl font-bold text-white leading-tight">Burak Toprak</h1>
+                    <div class="flex flex-wrap items-center gap-3 mt-1.5">
+                        <span class="text-xs text-steamTextDark flex items-center gap-1.5">
+                            <span>&#127471;&#127479;</span> Istanbul, Turkiye
+                        </span>
+                        <span class="text-xs" style="color:#57cbde;">
+                            <i class="fas fa-circle text-[6px] mr-1"></i>Currently Online
+                        </span>
+                    </div>
+                    <p class="text-xs text-steamTextDark mt-2 max-w-lg leading-relaxed">
+                        IT Business Analyst | Tech Strategist. Bridging the gap between business &amp; code.
+                    </p>
+                </div>
+
+                <!-- Level badge -->
+                <div class="level-badge-wrap shrink-0 relative hidden sm:block">
+                    <div class="level-badge">
+                        <div class="text-center">
+                            <div class="text-xl font-bold text-steamGreen leading-none">4</div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-1.5">
+                        <span class="text-[9px] text-steamTextDark uppercase tracking-wider">Level</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action buttons row -->
+            <div class="flex flex-wrap items-center gap-2 mt-4 pb-4 border-b border-white/5">
+                <a href="mailto:tburak181@gmail.com" class="steam-btn-green steam-btn">
+                    <i class="fas fa-envelope"></i> Contact Me (Email)
+                </a>
+                <a href="#" class="steam-btn">
+                    <i class="fab fa-linkedin"></i> LinkedIn
+                </a>
+                <a href="#" class="steam-btn">
+                    <i class="fab fa-github"></i> Source Code
+                </a>
+                <div class="ml-auto hidden md:flex items-center gap-2">
+                    <span class="text-[10px] text-steamTextDark">
+                        <i class="far fa-clock mr-1"></i> 4+ years on record
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="max-w-5xl mx-auto px-4 md:px-8 py-6">
+        <div class="profile-layout flex gap-5">
+
+            <!-- ===== LEFT / MAIN COLUMN ===== -->
+            <div class="profile-main flex-1 min-w-0 space-y-5">
+
+                <!-- FEATURED SHOWCASE -->
+                <div class="showcase-block rounded overflow-hidden">
+                    <div class="steam-section-header flex items-center gap-2">
+                        <i class="fas fa-star text-[10px]"></i>
+                        Featured Career Mode
+                    </div>
+                    <div class="p-4">
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <!-- Game art / icon -->
+                            <div class="shrink-0 w-full sm:w-48 h-28 rounded overflow-hidden relative">
+                                <div class="absolute inset-0 bg-gradient-to-br from-red-900/40 via-steamDark to-orange-900/30 flex items-center justify-center">
+                                    <div class="text-center">
+                                        <i class="fas fa-utensils text-4xl text-white/80 mb-1"></i>
+                                        <div class="text-white font-bold text-sm">SushiCo</div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-2 left-2">
+                                    <span class="text-[9px] bg-green-600 text-white px-1.5 py-0.5 rounded-sm uppercase font-bold">Now Playing</span>
+                                </div>
+                            </div>
+
+                            <!-- Info -->
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <h3 class="text-base font-bold text-white">SushiCo</h3>
+                                    <span class="text-[10px] text-steamTextDark bg-steamMid/50 px-2 py-0.5 rounded">Sep 2024 - Present</span>
+                                </div>
+                                <p class="text-xs text-steamLight mb-2">Business Analyst</p>
+                                <p class="text-xs text-steamTextDark leading-relaxed mb-3">
+                                    Managing mobile app developments and 3rd party integrations. Leading digital transformation by converting field requests into technical analysis.
+                                </p>
+                                <div class="flex flex-wrap gap-1.5">
+                                    <span class="text-[10px] bg-steamMid/40 text-steamText px-2 py-1 rounded-sm border border-white/5">
+                                        <i class="fas fa-mobile-alt mr-1 text-steamLight"></i>Mobile Apps
+                                    </span>
+                                    <span class="text-[10px] bg-steamMid/40 text-steamText px-2 py-1 rounded-sm border border-white/5">
+                                        <i class="fas fa-plug mr-1 text-steamLight"></i>API Integration
+                                    </span>
+                                    <span class="text-[10px] bg-steamMid/40 text-steamText px-2 py-1 rounded-sm border border-white/5">
+                                        <i class="fas fa-chart-line mr-1 text-steamLight"></i>CRM & Loyalty
+                                    </span>
+                                    <span class="text-[10px] bg-steamMid/40 text-steamText px-2 py-1 rounded-sm border border-white/5">
+                                        <i class="fas fa-vial mr-1 text-steamLight"></i>UAT Testing
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RECENT ACTIVITY -->
+                <div id="activity" class="steam-block rounded overflow-hidden">
+                    <div class="steam-section-header flex items-center gap-2">
+                        <i class="fas fa-history text-[10px]"></i>
+                        Recent Activity
+                        <span class="ml-auto text-[10px] text-steamTextDark font-normal normal-case tracking-normal">4+ years on record</span>
+                    </div>
+
+                    <!-- Peranet -->
+                    <div class="game-row m-3 rounded p-3 flex flex-col sm:flex-row gap-3">
+                        <div class="shrink-0 w-full sm:w-36 h-20 rounded overflow-hidden relative">
+                            <div class="absolute inset-0 bg-gradient-to-br from-blue-900/50 via-steamDark to-cyan-900/30 flex items-center justify-center">
+                                <div class="text-center">
+                                    <i class="fas fa-network-wired text-2xl text-white/70 mb-1"></i>
+                                    <div class="text-white/90 font-bold text-xs">Peranet</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center gap-2 mb-0.5">
+                                <h4 class="text-sm font-bold text-white">Peranet</h4>
+                            </div>
+                            <p class="text-xs text-steamLight mb-1">Project Expert</p>
+                            <p class="text-[11px] text-steamTextDark leading-relaxed mb-2">
+                                Managed customer projects from analysis to go-live. Coordinated between clients and dev teams to deliver custom software solutions.
+                            </p>
+                            <div class="flex items-center gap-3 text-[10px] text-steamTextDark">
+                                <span><i class="far fa-clock mr-1"></i>2.5 years on record</span>
+                                <span>2022 - Sep 2024</span>
+                            </div>
+                            <div class="flex flex-wrap gap-1.5 mt-2">
+                                <span class="text-[10px] bg-steamMid/30 text-steamText px-2 py-0.5 rounded-sm">Requirement Analysis</span>
+                                <span class="text-[10px] bg-steamMid/30 text-steamText px-2 py-0.5 rounded-sm">Process Flow Docs</span>
+                                <span class="text-[10px] bg-steamMid/30 text-steamText px-2 py-0.5 rounded-sm">Client Support</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Education -->
+                    <div class="game-row m-3 mt-0 rounded p-3 flex flex-col sm:flex-row gap-3">
+                        <div class="shrink-0 w-full sm:w-36 h-20 rounded overflow-hidden relative">
+                            <div class="absolute inset-0 bg-gradient-to-br from-purple-900/40 via-steamDark to-indigo-900/30 flex items-center justify-center">
+                                <div class="text-center">
+                                    <i class="fas fa-graduation-cap text-2xl text-white/70 mb-1"></i>
+                                    <div class="text-white/90 font-bold text-[10px]">Topkapi Univ.</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center gap-2 mb-0.5">
+                                <h4 class="text-sm font-bold text-white">Istanbul Topkapi University</h4>
+                                <span class="text-[9px] bg-yellow-600/80 text-white px-1.5 py-0.5 rounded-sm flex items-center gap-1">
+                                    <i class="fas fa-trophy text-[7px]"></i> Achievement
+                                </span>
+                            </div>
+                            <p class="text-xs text-steamLight mb-1">Management Information Systems</p>
+                            <p class="text-[11px] text-steamTextDark leading-relaxed">
+                                MIS Graduate. Completed coursework in business analysis, software project management, and information systems design.
+                            </p>
+                            <div class="flex items-center gap-3 mt-1.5 text-[10px] text-steamTextDark">
+                                <span><i class="fas fa-check-circle mr-1 text-green-400"></i>Achievement Unlocked: Scholar</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ACHIEVEMENT SHOWCASE -->
+                <div class="showcase-block rounded overflow-hidden">
+                    <div class="steam-section-header flex items-center gap-2">
+                        <i class="fas fa-trophy text-[10px]"></i>
+                        Achievement Showcase
+                        <span class="ml-auto text-[10px] text-steamTextDark font-normal normal-case tracking-normal">3 of 3 unlocked</span>
+                    </div>
+                    <div class="p-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div class="steam-badge-item rounded p-3 text-center">
+                            <div class="w-14 h-14 mx-auto rounded-lg bg-gradient-to-br from-red-500/20 to-transparent flex items-center justify-center mb-2 border border-red-500/10">
+                                <i class="fas fa-bug text-xl text-red-400"></i>
+                            </div>
+                            <p class="text-xs font-bold text-white">Bug Hunter</p>
+                            <p class="text-[10px] text-steamTextDark mt-0.5 leading-snug">Rigorous testing &amp; workflow compliance</p>
+                        </div>
+                        <div class="steam-badge-item rounded p-3 text-center">
+                            <div class="w-14 h-14 mx-auto rounded-lg bg-gradient-to-br from-purple-500/20 to-transparent flex items-center justify-center mb-2 border border-purple-500/10">
+                                <i class="fas fa-graduation-cap text-xl text-purple-400"></i>
+                            </div>
+                            <p class="text-xs font-bold text-white">Scholar</p>
+                            <p class="text-[10px] text-steamTextDark mt-0.5 leading-snug">Topkapi University &mdash; MIS Graduate</p>
+                        </div>
+                        <div class="steam-badge-item rounded p-3 text-center">
+                            <div class="w-14 h-14 mx-auto rounded-lg bg-gradient-to-br from-cyan-500/20 to-transparent flex items-center justify-center mb-2 border border-cyan-500/10">
+                                <i class="fas fa-people-arrows text-xl text-cyan-400"></i>
+                            </div>
+                            <p class="text-xs font-bold text-white">Bridge Builder</p>
+                            <p class="text-[10px] text-steamTextDark mt-0.5 leading-snug">Tech &amp; business team communication</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== RIGHT SIDEBAR ===== -->
+            <div class="profile-sidebar w-64 shrink-0 space-y-4">
+
+                <!-- Online Status -->
+                <div class="steam-block rounded p-3">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="w-2 h-2 rounded-full bg-steamOnline"></span>
+                        <span class="text-xs font-bold" style="color:#57cbde;">Currently Online</span>
+                    </div>
+                    <div class="text-[10px] text-steamTextDark space-y-1">
+                        <div class="flex justify-between">
+                            <span>Member since</span>
+                            <span class="text-steamText">2022</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Experience</span>
+                            <span class="text-steamText">4 years</span>
+                        </div>
+                    </div>
+                    <!-- XP bar -->
+                    <div class="mt-2 pt-2 border-t border-white/5">
+                        <div class="flex justify-between text-[9px] text-steamTextDark mb-1">
+                            <span>Level 4</span>
+                            <span>720 / 1000 XP</span>
+                        </div>
+                        <div class="w-full h-1.5 bg-black/40 rounded-sm overflow-hidden">
+                            <div class="h-full bg-gradient-to-r from-steamGreen to-steamLight rounded-sm" style="width:72%;"></div>
+                        </div>
+                    </div>
+                    <!-- Level badge mobile -->
+                    <div class="sm:hidden flex items-center gap-2 mt-2 pt-2 border-t border-white/5">
+                        <div class="level-badge" style="width:36px;height:36px;">
+                            <span class="text-sm font-bold text-steamGreen">4</span>
+                        </div>
+                        <span class="text-[10px] text-steamTextDark">Current Level</span>
+                    </div>
+                </div>
+
+                <!-- Badges (Skills) -->
+                <div id="badges-section" class="steam-block rounded overflow-hidden">
+                    <div class="steam-section-header text-[10px]">
+                        <i class="fas fa-award mr-1"></i> Badges (Skills)
+                    </div>
+                    <div class="p-3 grid grid-cols-3 gap-2">
+                        <div class="steam-badge-item rounded p-2 text-center cursor-default">
+                            <i class="fas fa-database text-lg text-orange-400 mb-1"></i>
+                            <p class="text-[9px] text-steamText leading-tight">SQL</p>
+                        </div>
+                        <div class="steam-badge-item rounded p-2 text-center cursor-default">
+                            <i class="fab fa-jira text-lg text-blue-400 mb-1"></i>
+                            <p class="text-[9px] text-steamText leading-tight">Jira</p>
+                        </div>
+                        <div class="steam-badge-item rounded p-2 text-center cursor-default">
+                            <i class="fas fa-exchange-alt text-lg text-green-400 mb-1"></i>
+                            <p class="text-[9px] text-steamText leading-tight">REST API</p>
+                        </div>
+                        <div class="steam-badge-item rounded p-2 text-center cursor-default">
+                            <i class="fas fa-file-excel text-lg text-emerald-400 mb-1"></i>
+                            <p class="text-[9px] text-steamText leading-tight">Excel</p>
+                        </div>
+                        <div class="steam-badge-item rounded p-2 text-center cursor-default">
+                            <i class="fas fa-paper-plane text-lg text-orange-300 mb-1"></i>
+                            <p class="text-[9px] text-steamText leading-tight">Postman</p>
+                        </div>
+                        <div class="steam-badge-item rounded p-2 text-center cursor-default">
+                            <i class="fas fa-chart-bar text-lg text-purple-400 mb-1"></i>
+                            <p class="text-[9px] text-steamText leading-tight">Adjust</p>
+                        </div>
+                    </div>
+                    <!-- Passive skills -->
+                    <div class="px-3 pb-3 space-y-1.5">
+                        <div class="text-[9px] text-steamTextDark uppercase tracking-wider mb-1">Passive Skills</div>
+                        <div class="steam-badge-item rounded p-2 flex items-center gap-2">
+                            <i class="fas fa-brain text-sm text-steamLight"></i>
+                            <span class="text-[10px] text-steamText">Analytical Thinking</span>
+                        </div>
+                        <div class="steam-badge-item rounded p-2 flex items-center gap-2">
+                            <i class="fas fa-lightbulb text-sm text-steamLight"></i>
+                            <span class="text-[10px] text-steamText">Problem Solving</span>
+                        </div>
+                        <div class="steam-badge-item rounded p-2 flex items-center gap-2">
+                            <i class="fas fa-language text-sm text-steamLight"></i>
+                            <span class="text-[10px] text-steamText">English (B2)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Links Block -->
+                <div class="steam-block rounded overflow-hidden">
+                    <div class="steam-section-header text-[10px]">
+                        <i class="fas fa-link mr-1"></i> Links
+                    </div>
+                    <div>
+                        <a href="#" class="sidebar-link">
+                            <span><i class="fas fa-gamepad mr-2 text-steamLight text-xs"></i>Projects</span>
+                            <span class="count">2</span>
+                        </a>
+                        <a href="#" class="sidebar-link">
+                            <span><i class="fas fa-toolbox mr-2 text-steamLight text-xs"></i>Tools</span>
+                            <span class="count">6</span>
+                        </a>
+                        <a href="#" class="sidebar-link">
+                            <span><i class="fas fa-certificate mr-2 text-steamLight text-xs"></i>Certificates</span>
+                            <span class="count">3</span>
+                        </a>
+                        <a href="#" class="sidebar-link">
+                            <span><i class="fas fa-users mr-2 text-steamLight text-xs"></i>Groups</span>
+                            <span class="count">--</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Contact -->
+                <div class="steam-block rounded overflow-hidden">
+                    <div class="steam-section-header text-[10px]">
+                        <i class="fas fa-address-book mr-1"></i> Quick Contact
+                    </div>
+                    <div class="p-3 space-y-2">
+                        <a href="mailto:tburak181@gmail.com" class="steam-btn w-full justify-center text-[11px]">
+                            <i class="fas fa-envelope"></i> tburak181@gmail.com
+                        </a>
+                        <a href="#" class="steam-btn w-full justify-center text-[11px]">
+                            <i class="fab fa-linkedin"></i> LinkedIn Profile
+                        </a>
+                        <a href="#" class="steam-btn w-full justify-center text-[11px]">
+                            <i class="fab fa-github"></i> GitHub (Mod Workshop)
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="mt-8 py-4 border-t border-white/5">
+        <div class="max-w-5xl mx-auto px-4 md:px-8 flex flex-col sm:flex-row items-center justify-between gap-2">
+            <p class="text-[10px] text-steamTextDark">
+                <i class="fab fa-steam mr-1"></i>
+                &copy; 2024 Burak Toprak &mdash; Steam Community Profile (Portfolio Edition)
+            </p>
+            <p class="text-[10px] text-steamTextDark">
+                All trademarks are property of their respective owners.
+            </p>
+        </div>
+    </footer>
+
+</body>
+</html>
