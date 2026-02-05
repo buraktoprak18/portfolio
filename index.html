@@ -605,6 +605,12 @@
             }
         }
 
+        /* Loader */
+        @keyframes loaderPulse {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+
         /* Small phones */
         @media (max-width: 380px) {
             .steam-subnav a { font-size: 10px; padding: 6px 6px; }
@@ -614,6 +620,18 @@
     </style>
 </head>
 <body class="font-steam">
+
+    <!-- ===== STEAM LOADING SCREEN ===== -->
+    <div id="steamLoader" style="position:fixed;inset:0;z-index:9999;background:#171a21;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.5s ease;">
+        <div style="text-align:center;">
+            <i class="fas fa-rocket" style="font-size:48px;color:#57cbde;margin-bottom:20px;display:block;animation:loaderPulse 1.5s ease infinite;"></i>
+            <div style="font-size:13px;color:#c6d4df;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;">Loading Profile</div>
+            <div style="width:240px;height:4px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden;">
+                <div id="loaderBar" style="width:0%;height:100%;background:linear-gradient(to right,#57cbde,#1a9fff);border-radius:2px;transition:width 0.3s ease;"></div>
+            </div>
+            <div id="loaderText" style="font-size:10px;color:#8f98a0;margin-top:8px;">Connecting...</div>
+        </div>
+    </div>
 
     <!-- Fixed particle background -->
     <div class="bg-space">
@@ -1137,6 +1155,33 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
     <script>
+        // ===== STEAM LOADER =====
+        (function() {
+            var bar = document.getElementById('loaderBar');
+            var text = document.getElementById('loaderText');
+            var loader = document.getElementById('steamLoader');
+            var steps = [
+                { w: 25, t: 'Loading assets...' },
+                { w: 50, t: 'Preparing profile...' },
+                { w: 75, t: 'Loading achievements...' },
+                { w: 100, t: 'Ready!' }
+            ];
+            var i = 0;
+            var interval = setInterval(function() {
+                if (i < steps.length) {
+                    bar.style.width = steps[i].w + '%';
+                    text.textContent = steps[i].t;
+                    i++;
+                } else {
+                    clearInterval(interval);
+                    setTimeout(function() {
+                        loader.style.opacity = '0';
+                        setTimeout(function() { loader.remove(); }, 500);
+                    }, 300);
+                }
+            }, 400);
+        })();
+
         // ===== STARFIELD BACKGROUND =====
         (function() {
             var canvas = document.getElementById('particleCanvas');
